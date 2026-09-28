@@ -311,7 +311,7 @@ Built with modern Filament v4 components and Spatie Role-Based Access Control:
 ### Step-by-Step Setup
 ```bash
 # 1. Clone repository
-git clone https://github.com/imrandevbd/laravel-landing-kit.git
+git clone https://github.com/imranbru99/laravel-landing-kit.git
 cd laravel-landing-kit
 
 # 2. Install dependencies & configure .env

@@ -17,7 +17,7 @@
 
 ### Step 1: Clone & Configure Environment
 ```bash
-git clone https://github.com/imrandevbd/laravel-landing-kit.git
+git clone https://github.com/imranbru99/laravel-landing-kit.git
 cd laravel-landing-kit
 cp .env.example .env
 composer install

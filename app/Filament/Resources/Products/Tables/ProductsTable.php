@@ -95,6 +95,12 @@ class ProductsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                Action::make('builder')
+                    ->label('Visual Builder')
+                    ->icon('heroicon-o-paint-brush')
+                    ->color('success')
+                    ->url(fn (Product $record): string => route('admin.products.builder', $record))
+                    ->openUrlInNewTab(),
                 Action::make('preview')
                     ->label('View Page')
                     ->icon('heroicon-o-arrow-top-right-on-square')

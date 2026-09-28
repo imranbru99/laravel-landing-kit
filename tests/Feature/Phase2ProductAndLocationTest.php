@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductOffer;
 use App\Models\ProductVariant;
 use App\Models\Thana;
+use App\Models\User;
 
 test('bangladesh locations and delivery zones are seeded with 64 districts', function () {
     expect(District::count())->toBe(64)
@@ -113,4 +114,20 @@ test('product can have variants and bundle offers', function () {
     expect($product->variants->count())->toBe(2)
         ->and($product->offers->count())->toBe(1)
         ->and($product->offers->first()->discount_amount)->toBe('150.00');
+});
+
+test('product resource edit page renders without errors', function () {
+    $admin = User::firstOrCreate(
+        ['email' => 'admin@amaronline.com'],
+        ['name' => 'Super Admin', 'password' => bcrypt('password')]
+    );
+    $admin->assignRole('Super Admin');
+
+    $product = Product::firstOrCreate(
+        ['name' => 'Test Polo Shirt'],
+        ['regular_price' => 1000, 'sale_price' => 850, 'status' => 'active']
+    );
+
+    $response = $this->actingAs($admin)->get("/admin/products/{$product->id}/edit");
+    $response->assertStatus(200);
 });

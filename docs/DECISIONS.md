@@ -75,3 +75,19 @@ This document records architectural, technical, and domain decisions made for **
   - Unified `TrackingManager` dispatching both client-side `dataLayer.push()` and server-side Conversions API (Meta CAPI, Stape, GA4 Measurement Protocol, TikTok Events API).
   - Deduplicated with shared `event_id`.
   - `purchase_tracked_at` timestamp on `orders` prevents duplicate purchase firing on refresh.
+
+---
+
+## 5. Courier & Document Generation
+- **Courier Drivers**:
+  - Implements `CourierDriverInterface` with `sendOrder(Order $order)` and `trackOrder(Order $order)`.
+  - Pluggable drivers: `SteadfastCourierDriver`, `PathaoCourierDriver`, `RedXCourierDriver`, and `ManualCourierDriver`.
+  - Credentials managed via cached and encrypted settings in admin panel.
+  - Consignment ID and tracking code recorded on order for 1-click status checking.
+- **Bangla PDF Generation**:
+  - `PdfGeneratorService` backed by `imrandevbd/laravel-unicode-pdf`.
+  - Templates rendered in UTF-8 with Hind Siliguri font support for Bengali invoices, packing slips, and courier stickers.
+  - Generates downloadable PDFs or print-ready preview streams directly from the admin panel orders table.
+- **Customer Lifetime Analytics**:
+  - Atomic recalculation of customer statistics (`total_orders`, `total_spent`, `delivered_orders_count`, `returned_orders_count`, `cancelled_orders_count`, `success_rate`) upon order status updates.
+

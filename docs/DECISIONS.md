@@ -91,3 +91,25 @@ This document records architectural, technical, and domain decisions made for **
 - **Customer Lifetime Analytics**:
   - Atomic recalculation of customer statistics (`total_orders`, `total_spent`, `delivered_orders_count`, `returned_orders_count`, `cancelled_orders_count`, `success_rate`) upon order status updates.
 
+---
+
+## 6. Public Checkout, Lead Capture & Public Pages
+- **Root Slug Handling**:
+  - `/{product-slug}` routes to `ProductLandingController@show`.
+  - Guarded against system routes (`admin`, `checkout`, `track-order`, `api`, `login`, etc.) via `slug_is_reserved()`.
+  - Unmatched slugs fall back to `SlugHistory` for permanent 301 redirects, preserving SEO value when a product title/slug changes.
+- **Phone-First Returning Customer Recognition**:
+  - Accept phone numbers with any BD prefix (`01[3-9]...`, `+880`, `880`) and Bengali numerals.
+  - Returns masked customer name and address snapshot to avoid exposing full customer data publicly.
+  - Allows returning customers 1-click order confirmation or explicit detail editing.
+- **Incomplete Checkout / Lead Capture**:
+  - Captures customer phone and partial entries into `incomplete_orders` on blur or debounce.
+  - Automatically converts lead status to `converted` when the order is successfully finalized.
+- **Deduplicated Purchase Tracking**:
+  - Order success page tracks `purchase_tracked_at` timestamp on `Order`.
+  - Purchase events are dispatched only on the first visit with unified transaction ID and items payload; subsequent page refreshes never fire duplicate events.
+- **Spam & Abuse Protection**:
+  - Invisible honeypot inputs (`_hp_name`, `_hp_time`) reject bot submissions submitted in under 1 second.
+  - IP and phone blocklist check via `Blocklist::isBlocked($phone, $ip)`.
+  - Configurable duplicate order prevention window (default 5 minutes).
+

@@ -101,3 +101,13 @@ if (!function_exists('llk_currency')) {
         return $symbol . ' ' . $formatted;
     }
 }
+
+if (!function_exists('format_bdt')) {
+    /**
+     * Helper alias for llk_currency.
+     */
+    function format_bdt(float|int|string|null $amount): string
+    {
+        return llk_currency($amount);
+    }
+}

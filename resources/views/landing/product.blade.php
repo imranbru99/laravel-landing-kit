@@ -4,6 +4,24 @@
 @section('meta_description', (string) ($product->seo_description ?: ($product->short_description ?: setting('seo_meta_description', ''))))
 
 @section('content')
+@if($product->landingPage && $product->landingPage->status === 'published' && $product->landingPage->sections->isNotEmpty())
+    <div class="landing-page-dynamic-wrapper">
+        @foreach($product->landingPage->sections as $pageSection)
+            {!! app(\App\Services\SectionRegistry::class)->render(
+                $pageSection->section_type,
+                $pageSection->content ?? [],
+                $pageSection->style ?? [],
+                [
+                    'product' => $product,
+                    'landingPage' => $product->landingPage,
+                    'pageSection' => $pageSection,
+                    'districts' => $districts,
+                    'deliveryZones' => $deliveryZones,
+                ]
+            ) !!}
+        @endforeach
+    </div>
+@else
 <div class="max-w-5xl mx-auto px-4 py-6 md:py-10" x-data="checkoutApp()">
     
     <!-- Hero / Product Showcase -->
@@ -511,4 +529,5 @@ function checkoutApp() {
 }
 </script>
 </div>
+@endif
 @endsection

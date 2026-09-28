@@ -27,7 +27,7 @@ class ProductLandingController extends Controller
         // 2. Find product by current active slug
         $product = Product::where('slug', $slug)
             ->active()
-            ->with(['images', 'variants', 'offers'])
+            ->with(['images', 'variants', 'offers', 'landingPage.sections' => fn ($q) => $q->where('is_visible', true)->orderBy('position')])
             ->first();
 
         // 3. Check for 301 redirect in slug history if not found

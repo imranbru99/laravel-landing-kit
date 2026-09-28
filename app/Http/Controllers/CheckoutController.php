@@ -117,6 +117,13 @@ class CheckoutController extends Controller
             ]
         );
 
+        // Dispatch Lead Server Tracking Event
+        try {
+            app(\App\Services\Tracking\TrackingManager::class)->trackLead($lead);
+        } catch (\Throwable $e) {
+            // Fail silently so customer experience is never interrupted
+        }
+
         return response()->json([
             'success' => true,
             'lead_id' => $lead->id,
@@ -284,6 +291,13 @@ class CheckoutController extends Controller
 
             return $order;
         });
+
+        // Dispatch Server-side Purchase tracking event with exact matching event_id
+        try {
+            app(\App\Services\Tracking\TrackingManager::class)->trackPurchase($order, 'purchase_' . $order->id);
+        } catch (\Throwable $e) {
+            // Fail safely
+        }
 
         if ($request->wantsJson()) {
             return response()->json([

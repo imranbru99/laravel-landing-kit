@@ -75,6 +75,7 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::post('publish', [LandingPageBuilderController::class, 'publish'])->name('publish');
         Route::post('ai/generate-full-page', [LandingPageBuilderController::class, 'generateFullPage'])->name('ai.generate-full-page');
         Route::post('ai/rewrite', [LandingPageBuilderController::class, 'rewriteCopy'])->name('ai.rewrite');
+        Route::post('templates/{template}/apply', [LandingPageBuilderController::class, 'applyTemplate'])->name('apply-template');
     });
 });
 

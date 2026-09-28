@@ -465,4 +465,17 @@ class LandingPageBuilderController extends Controller
             'revised_text' => $revised,
         ]);
     }
+
+    /**
+     * Apply a pre-built template to the current landing page.
+     */
+    public function applyTemplate(Request $request, LandingPage $landingPage, \App\Models\Template $template): JsonResponse
+    {
+        $landingPage->applyTemplate($template);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Template applied successfully!',
+        ]);
+    }
 }

@@ -402,4 +402,67 @@ class LandingPageBuilderController extends Controller
             'status' => $landingPage->status,
         ]);
     }
+
+    /**
+     * AI: Generate full landing page and save as draft.
+     */
+    public function generateFullPage(Request $request, LandingPage $landingPage, \App\Services\AI\AiLandingGenerator $generator): JsonResponse
+    {
+        $params = [
+            'product_name' => $request->input('product_name', $landingPage->product?->name ?? 'আমাদের পণ্য'),
+            'category' => $request->input('category', $landingPage->product?->categories?->first()?->name ?? 'Ecommerce'),
+            'benefits' => $request->input('benefits', $landingPage->product?->short_description ?? ''),
+            'target_audience' => $request->input('target_audience', 'Bangladeshi online shoppers'),
+            'tone' => $request->input('tone', 'persuasive, high converting, authentic'),
+            'language' => $request->input('language', 'bn'),
+        ];
+
+        // Backup existing state
+        $landingPage->createRevision(auth()->user(), 'Before AI Generation');
+
+        $sectionsData = $generator->generateLandingPage($params);
+
+        DB::transaction(function () use ($landingPage, $sectionsData) {
+            $landingPage->sections()->delete();
+            $landingPage->update(['status' => 'draft']);
+
+            foreach ($sectionsData as $index => $item) {
+                PageSection::create([
+                    'landing_page_id' => $landingPage->id,
+                    'section_type' => $item['section_type'],
+                    'position' => $index,
+                    'is_visible' => true,
+                    'content' => $item['content'],
+                    'style' => $item['style'],
+                    'responsive' => $item['responsive'],
+                ]);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'AI landing page generated successfully and saved as draft.',
+            'sections_count' => count($sectionsData),
+        ]);
+    }
+
+    /**
+     * AI: Rewrite or improve section copy.
+     */
+    public function rewriteCopy(Request $request, \App\Services\AI\AiLandingGenerator $generator): JsonResponse
+    {
+        $text = (string) $request->input('text', '');
+        $mode = (string) $request->input('mode', 'more_persuasive');
+
+        if (empty($text)) {
+            return response()->json(['error' => 'Text required'], 422);
+        }
+
+        $revised = $generator->rewriteCopy($text, $mode);
+
+        return response()->json([
+            'success' => true,
+            'revised_text' => $revised,
+        ]);
+    }
 }

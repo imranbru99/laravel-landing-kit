@@ -73,6 +73,8 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::post('revisions/{revision}/restore', [LandingPageBuilderController::class, 'restoreRevision'])->name('restore-revision');
         Route::post('update-settings', [LandingPageBuilderController::class, 'updatePageSettings'])->name('update-settings');
         Route::post('publish', [LandingPageBuilderController::class, 'publish'])->name('publish');
+        Route::post('ai/generate-full-page', [LandingPageBuilderController::class, 'generateFullPage'])->name('ai.generate-full-page');
+        Route::post('ai/rewrite', [LandingPageBuilderController::class, 'rewriteCopy'])->name('ai.rewrite');
     });
 });
 

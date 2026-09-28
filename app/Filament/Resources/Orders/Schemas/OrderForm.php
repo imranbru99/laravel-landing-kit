@@ -11,8 +11,8 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Schemas\Schema;
@@ -31,7 +31,9 @@ class OrderForm
                             ->tel()
                             ->live(debounce: 500)
                             ->afterStateUpdated(function ($state, Set $set) {
-                                if (empty($state)) return;
+                                if (empty($state)) {
+                                    return;
+                                }
                                 $normalized = llk_normalize_phone($state);
                                 $set('customer_phone', $normalized);
                                 $customer = Customer::where('phone', $normalized)->first();
@@ -66,8 +68,7 @@ class OrderForm
                                 ->relationship(
                                     name: 'thana',
                                     titleAttribute: 'name_en',
-                                    modifyQueryUsing: fn ($query, Get $get) =>
-                                        $get('district_id') ? $query->where('district_id', $get('district_id')) : $query
+                                    modifyQueryUsing: fn ($query, Get $get) => $get('district_id') ? $query->where('district_id', $get('district_id')) : $query
                                 )
                                 ->searchable(),
                         ]),

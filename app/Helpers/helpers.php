@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Services\SettingService;
 
-if (!function_exists('setting')) {
+if (! function_exists('setting')) {
     /**
      * Get a setting or the SettingService instance.
      */
@@ -20,7 +20,7 @@ if (!function_exists('setting')) {
     }
 }
 
-if (!function_exists('llk_bn_number')) {
+if (! function_exists('llk_bn_number')) {
     /**
      * Convert English digits to Bengali numerals.
      */
@@ -33,7 +33,7 @@ if (!function_exists('llk_bn_number')) {
     }
 }
 
-if (!function_exists('llk_en_number')) {
+if (! function_exists('llk_en_number')) {
     /**
      * Convert Bengali numerals to English digits.
      */
@@ -46,7 +46,7 @@ if (!function_exists('llk_en_number')) {
     }
 }
 
-if (!function_exists('llk_normalize_phone')) {
+if (! function_exists('llk_normalize_phone')) {
     /**
      * Normalize Bangladeshi phone number to 01XXXXXXXXX format.
      */
@@ -64,25 +64,26 @@ if (!function_exists('llk_normalize_phone')) {
 
         // If it starts with 1 and is 10 digits, add 0
         if (strlen($cleaned) === 10 && str_starts_with($cleaned, '1')) {
-            $cleaned = '0' . $cleaned;
+            $cleaned = '0'.$cleaned;
         }
 
         return $cleaned;
     }
 }
 
-if (!function_exists('llk_is_valid_bd_phone')) {
+if (! function_exists('llk_is_valid_bd_phone')) {
     /**
      * Validate if normalized phone is a valid Bangladeshi number.
      */
     function llk_is_valid_bd_phone(string $phone): bool
     {
         $normalized = llk_normalize_phone($phone);
+
         return (bool) preg_match('/^01[3-9]\d{8}$/', $normalized);
     }
 }
 
-if (!function_exists('llk_currency')) {
+if (! function_exists('llk_currency')) {
     /**
      * Format currency in BDT with optional Bangla numerals.
      */
@@ -91,18 +92,20 @@ if (!function_exists('llk_currency')) {
         $amount = (float) ($amount ?? 0);
         $formatted = number_format($amount, 0, '.', ',');
 
-        $useBangla = !$forceEnglish && (bool) setting('use_bangla_numerals', false);
+        $useBangla = ! $forceEnglish && (bool) setting('use_bangla_numerals', false);
         if ($useBangla) {
             $formatted = llk_bn_number($formatted);
-            return '৳ ' . $formatted;
+
+            return '৳ '.$formatted;
         }
 
         $symbol = (string) setting('currency_symbol', '৳');
-        return $symbol . ' ' . $formatted;
+
+        return $symbol.' '.$formatted;
     }
 }
 
-if (!function_exists('format_bdt')) {
+if (! function_exists('format_bdt')) {
     /**
      * Helper alias for llk_currency.
      */

@@ -1,58 +1,100 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Landing Kit (LLK) 🇧🇩
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **A high-performance, admin-managed Laravel 13 landing page and one-product-checkout system engineered specifically for Bangladesh e-commerce shops.**
 
-## About Laravel
+[![Laravel 13](https://img.shields.io/badge/Laravel-13.x-red.svg)](https://laravel.com)
+[![PHP 8.3+](https://img.shields.io/badge/PHP-8.3+-blue.svg)](https://php.net)
+[![Filament v4](https://img.shields.io/badge/Filament-v4.x-orange.svg)](https://filamentphp.com)
+[![Pest Tests](https://img.shields.io/badge/Tests-54%20passed-brightgreen.svg)](https://pestphp.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A modern, lightning-fast alternative to WordPress/Elementor/WooCommerce for direct-to-consumer merchants running Facebook/TikTok ad funnels in Bangladesh. Achieve **90+ Google Lighthouse mobile scores**, eliminate cart abandonment, and streamline Cash-on-Delivery fulfillment.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ⚡ Key Highlights
 
-## Learning Laravel
+- **Phone-Number-First Checkout**: Validates Bangladeshi mobile formats (`01[3-9]...`), normalizes prefixes (`+880`, `880`), translates Bengali digits (`০-৯`), and auto-detects returning customers with privacy-preserving masked autofill.
+- **Root-Level Product Slugs**: Every product has its own dedicated landing page at `/{product-slug}` using Unicode-safe slugs with historical 301 redirects.
+- **3-Pane Visual Builder**: Custom drag-and-drop builder with a library of **107+ prebuilt sections**, live iframe canvas with responsive desktop/tablet/mobile toggles, live property inspector, revisions restore, and reusable saved sections.
+- **107 Ready-Made Bangladeshi Shop Templates**: Spread across 13 core categories (Panjabi, Saree, Honey, Organic Oil, ANC Earbuds, Smartwatch, Bedsheets, Books, Helmets, etc.) with realistic Bengali copy, BDT pricing (`৳`), and festival offers (Eid, Pohela Boishakh, Winter Sale).
+- **AI-Powered Builder**: Integrates `imrandevbd/laravel-ai-hub` to generate complete structured landing pages, rewrite micro-copy, craft persuasive benefits, and suggest image prompts—with strict schema validation and XSS protection.
+- **Plug-and-Play Tracking & CAPI**: Dual browser & server-side tracking (Google Tag Manager, Meta Pixel + Conversions API via Stape or direct, GA4 Measurement Protocol, TikTok Events API) with SHA-256 hashed user data, shared `event_id` deduplication, and single-fire purchase guards.
+- **22-State Order Lifecycle**: Complete order state machine (Incomplete Lead, Pending, Confirmed, Shipped, Delivered, Returned, etc.) with atomic stock decrement/restoration and customer metrics calculation.
+- **Pluggable Bangladeshi Couriers**: Native driver implementations for **Steadfast**, **Pathao**, **RedX**, and In-House/Manual delivery.
+- **Unicode Bengali PDFs**: Invoices, packing slips, and courier stickers rendered with correct Bengali typography via `imrandevbd/laravel-unicode-pdf`.
+- **Zero-Config Master Installer**: Run `php artisan llk:install` to set up migrations, seed locations, templates, demo products, and super admin.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack & Required Packages
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **Framework**: Laravel 13 (Latest Stable)
+- **Admin Panel**: Filament v4
+- **Database**: MySQL 8.0 & Redis 6.0+ (Sessions, Queues, Cache)
+- **Frontend**: Blade + Tailwind CSS (standalone CDN / critical CSS) + Alpine.js
+- **Testing**: Pest PHP (54 tests, 261 assertions)
+- **Packages**:
+  1. [`imrandevbd/laravel-ai-hub`](https://github.com/imrandevbd/laravel-ai-hub): AI engine & provider management.
+  2. [`imrandevbd/laravel-unicode-pdf`](https://github.com/imrandevbd/laravel-unicode-pdf): Bangla-safe PDF document generator.
+  3. [`imrandevbd/laravel-universal-slug`](https://github.com/imrandevbd/laravel-universal-slug): Multi-script slug engine with 301 history redirects.
+  4. [`imrandevbd/laravel-filament-master`](https://github.com/imrandevbd/laravel-filament-master): Filament resource conventions & base helpers.
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🚀 Quickstart & Installation
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clone the repository
+git clone https://github.com/imrandevbd/laravel-landing-kit.git
+cd laravel-landing-kit
 
-php artisan boost:install
+# 2. Install dependencies & configure .env
+cp .env.example .env
+composer install
+php artisan key:generate
+
+# 3. Configure database in .env (MySQL 8 & Redis)
+# DB_DATABASE=laravel_landing_kit
+# DB_USERNAME=root
+# DB_PASSWORD=secret
+
+# 4. Run the Master Installer
+php artisan llk:install --force
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Default Credentials
+- **Admin Panel**: [`http://localhost/admin`](http://localhost/admin)
+- **Email**: `admin@amaronline.com`
+- **Password**: `password`
+- **Demo Storefront**: [`http://localhost/premium-semi-fitted-eid-panjabi`](http://localhost/premium-semi-fitted-eid-panjabi)
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📂 Documentation
 
-## Code of Conduct
+- 📖 [Setup & Deployment Guide](docs/SETUP.md)
+- 📐 [Architectural Decisions & Record](docs/DECISIONS.md)
+- 🎨 [Section Library & Adding Custom Sections](docs/SECTIONS.md)
+- 📦 [107 Templates Catalog & JSON Import/Export](docs/TEMPLATES.md)
+- 📡 [Tracking Setup: Stape, GTM & Meta CAPI](docs/TRACKING.md)
+- 🚚 [Courier Integration: Steadfast, Pathao & RedX](docs/COURIERS.md)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🧪 Testing & Code Quality
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Run tests using Pest:
+```bash
+php artisan test
+```
 
-## License
+Run Laravel Pint for strict PSR-12 code style:
+```bash
+vendor/bin/pint
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 📄 License
+The MIT License (MIT). Please see [License File](LICENSE) for more information.

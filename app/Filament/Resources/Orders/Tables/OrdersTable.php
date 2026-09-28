@@ -99,7 +99,7 @@ class OrdersTable
                             ->label('New Order Status')
                             ->options(function (Order $record) {
                                 return collect($record->status->allowedTransitions())
-                                    ->mapWithKeys(fn (OrderStatus $s) => [$s->value => $s->labelEn() . ' (' . $s->labelBn() . ')'])
+                                    ->mapWithKeys(fn (OrderStatus $s) => [$s->value => $s->labelEn().' ('.$s->labelBn().')'])
                                     ->all();
                             })
                             ->required(),

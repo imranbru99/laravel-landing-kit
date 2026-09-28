@@ -88,6 +88,7 @@ enum OrderStatus: string
     public function label(): string
     {
         $lang = (string) setting('default_language', 'bn');
+
         return $lang === 'bn' ? $this->labelBn() : $this->labelEn();
     }
 
@@ -113,14 +114,14 @@ enum OrderStatus: string
     public function decrementsStock(): bool
     {
         return in_array($this, [
-            self::Confirmed, self::Processing, self::ReadyToShip, self::Shipped, self::InTransit, self::OutForDelivery, self::Delivered, self::Paid
+            self::Confirmed, self::Processing, self::ReadyToShip, self::Shipped, self::InTransit, self::OutForDelivery, self::Delivered, self::Paid,
         ], true);
     }
 
     public function restoresStock(): bool
     {
         return in_array($this, [
-            self::Cancelled, self::Returned, self::ReturnReceived, self::Refunded, self::FakeSpam
+            self::Cancelled, self::Returned, self::ReturnReceived, self::Refunded, self::FakeSpam,
         ], true);
     }
 

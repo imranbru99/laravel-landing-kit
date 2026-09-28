@@ -23,6 +23,7 @@ class SectionRegistry
     public function register(SectionTypeInterface $section): self
     {
         $this->sections[$section->key()] = $section;
+
         return $this;
     }
 
@@ -59,7 +60,7 @@ class SectionRegistry
      */
     public function byCategory(?string $category = null): Collection
     {
-        if (!$category || $category === 'all') {
+        if (! $category || $category === 'all') {
             return $this->all();
         }
 
@@ -103,14 +104,14 @@ class SectionRegistry
     public function render(string $key, array $content = [], array $style = [], array $context = []): string
     {
         $section = $this->get($key);
-        if (!$section) {
+        if (! $section) {
             return "<!-- Section [{$key}] not found in registry -->";
         }
 
         $mergedContent = array_merge($section->defaults(), $content);
         $viewPath = $section->view();
 
-        if (!View::exists($viewPath)) {
+        if (! View::exists($viewPath)) {
             // Render generic fallback card if specific Blade view doesn't exist yet
             return view('sections.generic-fallback', [
                 'section' => $section,

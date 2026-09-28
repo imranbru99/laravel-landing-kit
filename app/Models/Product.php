@@ -17,7 +17,7 @@ use ImranDev\UniversalSlug\Traits\HasUniversalSlug;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes, HasUniversalSlug, HasSlugHistory;
+    use HasFactory, HasSlugHistory, HasUniversalSlug, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -142,7 +142,7 @@ class Product extends Model
      */
     public function isInStock(): bool
     {
-        if (!$this->track_stock || $this->allow_backorder) {
+        if (! $this->track_stock || $this->allow_backorder) {
             return true;
         }
 
@@ -156,10 +156,10 @@ class Product extends Model
     {
         $image = $this->images->firstWhere('is_primary', true) ?? $this->images->first();
 
-        if ($image && !empty($image->image_path)) {
+        if ($image && ! empty($image->image_path)) {
             return str_starts_with($image->image_path, 'http')
                 ? $image->image_path
-                : asset('storage/' . $image->image_path);
+                : asset('storage/'.$image->image_path);
         }
 
         return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><rect width="100%" height="100%" fill="%23f1f5f9"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%2364748b">No Image Available</text></svg>';

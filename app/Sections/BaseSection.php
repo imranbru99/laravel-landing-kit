@@ -31,7 +31,7 @@ abstract class BaseSection implements SectionTypeInterface
 
     public function view(): string
     {
-        return 'sections.' . str_replace('_', '-', $this->key());
+        return 'sections.'.str_replace('_', '-', $this->key());
     }
 
     public function preview(): string

@@ -18,7 +18,7 @@ class PathaoCourierDriver implements CourierDriverInterface
     public function sendOrder(Order $order): CourierShipmentResult
     {
         $token = $this->getAccessToken();
-        if (!$token) {
+        if (! $token) {
             return new CourierShipmentResult(
                 success: false,
                 message: 'Failed to authenticate with Pathao API. Check credentials in Settings.'
@@ -44,8 +44,9 @@ class PathaoCourierDriver implements CourierDriverInterface
 
             $data = $response->json() ?? [];
 
-            if ($response->successful() && !empty($data['data']['consignment_id'])) {
+            if ($response->successful() && ! empty($data['data']['consignment_id'])) {
                 $consignmentId = (string) $data['data']['consignment_id'];
+
                 return new CourierShipmentResult(
                     success: true,
                     consignmentId: $consignmentId,
@@ -63,14 +64,14 @@ class PathaoCourierDriver implements CourierDriverInterface
                 rawResponse: $data
             );
         } catch (\Throwable $e) {
-            return new CourierShipmentResult(success: false, message: 'Pathao exception: ' . $e->getMessage());
+            return new CourierShipmentResult(success: false, message: 'Pathao exception: '.$e->getMessage());
         }
     }
 
     public function trackOrder(Order $order): CourierTrackingResult
     {
         $token = $this->getAccessToken();
-        if (!$token || !$order->courier_consignment_id) {
+        if (! $token || ! $order->courier_consignment_id) {
             return new CourierTrackingResult(success: false, status: 'unknown', message: 'No Pathao token or consignment ID');
         }
 

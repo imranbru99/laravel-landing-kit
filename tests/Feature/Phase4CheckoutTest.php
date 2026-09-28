@@ -6,17 +6,17 @@ use App\Models\Blocklist;
 use App\Models\Customer;
 use App\Models\DeliveryZone;
 use App\Models\District;
-use App\Models\IncompleteOrder;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductOffer;
-use App\Models\Thana;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Routing\Middleware\ThrottleRequestsWithRedis;
 use ImranDev\UniversalSlug\Models\SlugHistory;
 
 beforeEach(function () {
     $this->withoutMiddleware([
-        \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
+        ThrottleRequests::class,
+        ThrottleRequestsWithRedis::class,
     ]);
 });
 
@@ -201,9 +201,9 @@ test('success page sets purchase tracked timestamp and prevents duplicate purcha
     ]);
 
     // First visit to order-success: should fire purchase event
-    $firstResponse = $this->get('/order-success/' . $order->order_token);
+    $firstResponse = $this->get('/order-success/'.$order->order_token);
     $firstResponse->assertStatus(200);
-    $firstResponse->assertSee("window.dataLayer.push");
+    $firstResponse->assertSee('window.dataLayer.push');
     $firstResponse->assertSee("event: 'purchase'", false);
 
     // Verify order now has purchase_tracked_at set
@@ -211,7 +211,7 @@ test('success page sets purchase tracked timestamp and prevents duplicate purcha
     expect($order->purchase_tracked_at)->not->toBeNull();
 
     // Second visit (page refresh): should NOT fire purchase event
-    $secondResponse = $this->get('/order-success/' . $order->order_token);
+    $secondResponse = $this->get('/order-success/'.$order->order_token);
     $secondResponse->assertStatus(200);
     $secondResponse->assertDontSee("event: 'purchase'", false);
 });
@@ -267,7 +267,7 @@ test('order tracking page finds order and renders status timeline', function () 
         'total_amount' => 620.00,
     ]);
 
-    $response = $this->get('/track-order?order_number=' . $order->order_number . '&phone=01911223355');
+    $response = $this->get('/track-order?order_number='.$order->order_number.'&phone=01911223355');
     $response->assertStatus(200);
     $response->assertSee($order->order_number);
     $response->assertSee('অর্ডার প্রগ্রেস টাইমলাইন');

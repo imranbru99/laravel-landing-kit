@@ -16,7 +16,9 @@ class Phase10TemplatesTest extends TestCase
     use DatabaseTransactions;
 
     protected User $admin;
+
     protected Product $product;
+
     protected LandingPage $landingPage;
 
     protected function setUp(): void
@@ -24,7 +26,7 @@ class Phase10TemplatesTest extends TestCase
         parent::setUp();
 
         $this->admin = User::factory()->create([
-            'email' => 'templates_test_' . uniqid() . '@example.com',
+            'email' => 'templates_test_'.uniqid().'@example.com',
         ]);
 
         $this->product = Product::create([

@@ -14,7 +14,7 @@ class ManualCourierDriver implements CourierDriverInterface
 {
     public function sendOrder(Order $order): CourierShipmentResult
     {
-        $tracking = 'MANUAL-' . strtoupper(Str::random(8));
+        $tracking = 'MANUAL-'.strtoupper(Str::random(8));
 
         return new CourierShipmentResult(
             success: true,

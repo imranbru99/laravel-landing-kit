@@ -50,7 +50,7 @@ return new class extends Migration
             $table->string('order_number', 64)->unique()->index();
             $table->string('order_token', 64)->unique()->index(); // signed/unguessable public token
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
-            
+
             // Customer snapshots at time of order
             $table->string('customer_name');
             $table->string('customer_phone', 20)->index();
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->foreignId('delivery_zone_id')->nullable()->constrained('delivery_zones')->nullOnDelete();
 
             $table->string('status', 32)->default('pending')->index();
-            
+
             // Financials
             $table->decimal('subtotal', 12, 2)->default(0.00);
             $table->decimal('delivery_charge', 12, 2)->default(0.00);

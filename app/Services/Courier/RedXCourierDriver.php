@@ -35,8 +35,9 @@ class RedXCourierDriver implements CourierDriverInterface
 
             $data = $response->json() ?? [];
 
-            if ($response->successful() && !empty($data['tracking_id'])) {
+            if ($response->successful() && ! empty($data['tracking_id'])) {
                 $trackingId = (string) $data['tracking_id'];
+
                 return new CourierShipmentResult(
                     success: true,
                     consignmentId: $trackingId,
@@ -54,14 +55,14 @@ class RedXCourierDriver implements CourierDriverInterface
                 rawResponse: $data
             );
         } catch (\Throwable $e) {
-            return new CourierShipmentResult(success: false, message: 'RedX Exception: ' . $e->getMessage());
+            return new CourierShipmentResult(success: false, message: 'RedX Exception: '.$e->getMessage());
         }
     }
 
     public function trackOrder(Order $order): CourierTrackingResult
     {
         $token = (string) setting('redx_api_token');
-        if (empty($token) || !$order->courier_tracking_id) {
+        if (empty($token) || ! $order->courier_tracking_id) {
             return new CourierTrackingResult(success: false, status: 'unknown', message: 'No tracking ID or token');
         }
 

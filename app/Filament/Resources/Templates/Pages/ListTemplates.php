@@ -32,31 +32,33 @@ class ListTemplates extends ListRecords
                         ->acceptedFileTypes(['application/json']),
                 ])
                 ->action(function (array $data) {
-                    $filePath = storage_path('app/public/' . $data['template_file']);
-                    if (!file_exists($filePath)) {
+                    $filePath = storage_path('app/public/'.$data['template_file']);
+                    if (! file_exists($filePath)) {
                         Notification::make()->title('File not found')->danger()->send();
+
                         return;
                     }
 
                     $raw = file_get_contents($filePath);
                     $decoded = json_decode($raw, true);
 
-                    if (!$decoded || !isset($decoded['name'])) {
+                    if (! $decoded || ! isset($decoded['name'])) {
                         Notification::make()->title('Invalid template format')->danger()->send();
+
                         return;
                     }
 
                     DB::transaction(function () use ($decoded) {
                         $template = Template::create([
                             'name' => $decoded['name'],
-                            'slug' => ($decoded['slug'] ?? Str::slug($decoded['name'])) . '-' . uniqid(),
+                            'slug' => ($decoded['slug'] ?? Str::slug($decoded['name'])).'-'.uniqid(),
                             'category' => $decoded['category'] ?? 'universal',
                             'description' => $decoded['description'] ?? null,
                             'palette' => $decoded['palette'] ?? null,
                             'tags' => $decoded['tags'] ?? [],
                         ]);
 
-                        if (!empty($decoded['sections'])) {
+                        if (! empty($decoded['sections'])) {
                             foreach ($decoded['sections'] as $index => $sec) {
                                 TemplateSection::create([
                                     'template_id' => $template->id,

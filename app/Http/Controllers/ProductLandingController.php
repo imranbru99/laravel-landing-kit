@@ -31,14 +31,14 @@ class ProductLandingController extends Controller
             ->first();
 
         // 3. Check for 301 redirect in slug history if not found
-        if (!$product) {
+        if (! $product) {
             $history = SlugHistory::where('slug', $slug)
                 ->where('sluggable_type', Product::class)
                 ->latest()
                 ->first();
 
             if ($history && $history->sluggable) {
-                return redirect()->to('/' . $history->sluggable->slug, 301);
+                return redirect()->to('/'.$history->sluggable->slug, 301);
             }
 
             abort(404, 'Product not found.');

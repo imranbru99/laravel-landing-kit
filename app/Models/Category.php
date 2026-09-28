@@ -16,7 +16,7 @@ use ImranDev\UniversalSlug\Traits\HasUniversalSlug;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes, HasUniversalSlug, HasSlugHistory;
+    use HasFactory, HasSlugHistory, HasUniversalSlug, SoftDeletes;
 
     protected $fillable = [
         'name',

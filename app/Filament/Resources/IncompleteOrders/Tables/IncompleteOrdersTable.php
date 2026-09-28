@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\IncompleteOrders\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class IncompleteOrdersTable
@@ -48,7 +50,7 @@ class IncompleteOrdersTable
                     ->sortable(),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->options([
                         'lead' => 'Lead',
                         'called' => 'Called',
@@ -57,13 +59,13 @@ class IncompleteOrdersTable
                     ]),
             ])
             ->recordActions([
-                \Filament\Actions\Action::make('mark_called')
+                Action::make('mark_called')
                     ->label('Mark Called')
                     ->icon('heroicon-o-phone')
                     ->color('info')
                     ->visible(fn ($record) => $record->status === 'lead')
                     ->action(fn ($record) => $record->update(['status' => 'called'])),
-                \Filament\Actions\Action::make('mark_abandoned')
+                Action::make('mark_abandoned')
                     ->label('Mark Abandoned')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')

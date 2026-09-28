@@ -16,7 +16,7 @@ class LandingKitServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(SectionRegistry::class, function () {
-            $registry = new SectionRegistry();
+            $registry = new SectionRegistry;
 
             // Auto-register the 107+ standard sections from SectionCatalog
             foreach (SectionCatalog::getDefinitions() as $section) {

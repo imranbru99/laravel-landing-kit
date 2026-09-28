@@ -62,6 +62,7 @@ class TemplateResource extends Resource
                     ->formatStateUsing(function (Template $record) {
                         $p = $record->palette['primary_color'] ?? '#10b981';
                         $a = $record->palette['accent_color'] ?? '#f59e0b';
+
                         return "<div class='flex items-center space-x-1.5'><span class='w-4 h-4 rounded-full border border-slate-300' style='background-color: {$p}'></span><span class='w-4 h-4 rounded-full border border-slate-300' style='background-color: {$a}'></span></div>";
                     })
                     ->html(),

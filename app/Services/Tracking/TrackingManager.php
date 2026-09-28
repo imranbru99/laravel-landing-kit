@@ -16,7 +16,7 @@ class TrackingManager
      */
     public function trackPurchase(Order $order, ?string $eventId = null): void
     {
-        $eventId = $eventId ?: 'order_' . $order->id . '_' . Str::random(8);
+        $eventId = $eventId ?: 'order_'.$order->id.'_'.Str::random(8);
 
         $customer = $order->customer;
         $userData = [
@@ -58,7 +58,7 @@ class TrackingManager
      */
     public function trackLead(IncompleteOrder $lead, ?string $eventId = null): void
     {
-        $eventId = $eventId ?: 'lead_' . $lead->id . '_' . Str::random(8);
+        $eventId = $eventId ?: 'lead_'.$lead->id.'_'.Str::random(8);
 
         $userData = [
             'phone' => $lead->phone,
@@ -88,7 +88,7 @@ class TrackingManager
      */
     public function sendTestEvent(string $platform = 'meta_capi'): void
     {
-        $eventId = 'test_' . time();
+        $eventId = 'test_'.time();
         $userData = [
             'phone' => '01700000000',
             'name' => 'Test User',

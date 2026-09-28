@@ -55,7 +55,7 @@ class ProductsTable
                     ->sortable()
                     ->badge()
                     ->color(fn (Product $record): string => match (true) {
-                        !$record->track_stock => 'info',
+                        ! $record->track_stock => 'info',
                         $record->stock_quantity <= 0 => 'danger',
                         $record->stock_quantity <= $record->low_stock_threshold => 'warning',
                         default => 'success',

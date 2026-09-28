@@ -34,7 +34,7 @@ class OrderStatusStateMachine
      */
     public function transition(Order $order, OrderStatus $targetStatus, ?User $user = null, ?string $notes = null): Order
     {
-        if (!$this->canTransition($order, $targetStatus)) {
+        if (! $this->canTransition($order, $targetStatus)) {
             throw InvalidStatusTransitionException::make($order->status, $targetStatus);
         }
 
@@ -42,7 +42,7 @@ class OrderStatusStateMachine
             $fromStatus = $order->status;
 
             // 1. Stock Decrement
-            if ($targetStatus->decrementsStock() && !$order->stock_decremented) {
+            if ($targetStatus->decrementsStock() && ! $order->stock_decremented) {
                 $this->adjustStock($order, decrement: true);
                 $order->stock_decremented = true;
             }

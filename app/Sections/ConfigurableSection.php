@@ -49,7 +49,7 @@ class ConfigurableSection extends BaseSection
 
     public function view(): string
     {
-        return $this->viewName ?: 'sections.' . str_replace('_', '-', $this->key);
+        return $this->viewName ?: 'sections.'.str_replace('_', '-', $this->key);
     }
 
     public function preview(): string

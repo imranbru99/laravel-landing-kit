@@ -60,13 +60,13 @@ class SteadfastCourierDriver implements CourierDriverInterface
 
             return new CourierShipmentResult(
                 success: false,
-                message: $data['message'] ?? 'Steadfast API error: ' . $response->body(),
+                message: $data['message'] ?? 'Steadfast API error: '.$response->body(),
                 rawResponse: $data
             );
         } catch (\Throwable $e) {
             return new CourierShipmentResult(
                 success: false,
-                message: 'Steadfast HTTP Exception: ' . $e->getMessage()
+                message: 'Steadfast HTTP Exception: '.$e->getMessage()
             );
         }
     }
@@ -76,7 +76,7 @@ class SteadfastCourierDriver implements CourierDriverInterface
         $apiKey = (string) setting('steadfast_api_key');
         $secretKey = (string) setting('steadfast_secret_key');
 
-        if (!$order->courier_consignment_id) {
+        if (! $order->courier_consignment_id) {
             return new CourierTrackingResult(success: false, status: 'unknown', message: 'No consignment ID');
         }
 

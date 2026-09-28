@@ -17,11 +17,11 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Thana;
+use App\Services\Tracking\TrackingManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
@@ -31,8 +31,8 @@ class CheckoutController extends Controller
     public function customerLookup(Request $request): JsonResponse
     {
         $phoneInput = (string) $request->input('phone', '');
-        
-        if (!llk_is_valid_bd_phone($phoneInput)) {
+
+        if (! llk_is_valid_bd_phone($phoneInput)) {
             return response()->json([
                 'valid' => false,
                 'message' => 'Invalid phone number format',
@@ -52,7 +52,7 @@ class CheckoutController extends Controller
 
         $customer = Customer::where('phone', $phone)->first();
 
-        if (!$customer) {
+        if (! $customer) {
             return response()->json([
                 'valid' => true,
                 'found' => false,
@@ -60,7 +60,7 @@ class CheckoutController extends Controller
         }
 
         // Return customer info for auto-fill with privacy masking
-        $thanas = $customer->district_id 
+        $thanas = $customer->district_id
             ? Thana::where('district_id', $customer->district_id)->orderBy('name_en')->get(['id', 'name_en', 'name_bn'])
             : [];
 
@@ -84,7 +84,7 @@ class CheckoutController extends Controller
         $phoneInput = (string) $request->input('phone', '');
         $productId = $request->input('product_id');
 
-        if (!llk_is_valid_bd_phone($phoneInput) || !$productId) {
+        if (! llk_is_valid_bd_phone($phoneInput) || ! $productId) {
             return response()->json(['success' => false], 422);
         }
 
@@ -119,7 +119,7 @@ class CheckoutController extends Controller
 
         // Dispatch Lead Server Tracking Event
         try {
-            app(\App\Services\Tracking\TrackingManager::class)->trackLead($lead);
+            app(TrackingManager::class)->trackLead($lead);
         } catch (\Throwable $e) {
             // Fail silently so customer experience is never interrupted
         }
@@ -166,7 +166,7 @@ class CheckoutController extends Controller
         $unitPrice = $product->effective_price;
         $variant = null;
 
-        if (!empty($validated['product_variant_id'])) {
+        if (! empty($validated['product_variant_id'])) {
             $variant = ProductVariant::where('product_id', $product->id)
                 ->find($validated['product_variant_id']);
 
@@ -202,7 +202,7 @@ class CheckoutController extends Controller
             if ($zone) {
                 $deliveryCharge = (float) $zone->charge;
             }
-        } elseif (!empty($validated['district_id'])) {
+        } elseif (! empty($validated['district_id'])) {
             $district = District::find($validated['district_id']);
             if ($district && $district->is_inside_dhaka) {
                 $deliveryCharge = 60.00;
@@ -294,7 +294,7 @@ class CheckoutController extends Controller
 
         // Dispatch Server-side Purchase tracking event with exact matching event_id
         try {
-            app(\App\Services\Tracking\TrackingManager::class)->trackPurchase($order, 'purchase_' . $order->id);
+            app(TrackingManager::class)->trackPurchase($order, 'purchase_'.$order->id);
         } catch (\Throwable $e) {
             // Fail safely
         }
@@ -317,7 +317,7 @@ class CheckoutController extends Controller
     public function thanas(Request $request): JsonResponse
     {
         $districtId = $request->input('district_id');
-        if (!$districtId) {
+        if (! $districtId) {
             return response()->json([]);
         }
 

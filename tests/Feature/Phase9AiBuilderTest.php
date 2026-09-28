@@ -17,7 +17,9 @@ class Phase9AiBuilderTest extends TestCase
     use DatabaseTransactions;
 
     protected User $admin;
+
     protected Product $product;
+
     protected LandingPage $landingPage;
 
     protected function setUp(): void
@@ -25,7 +27,7 @@ class Phase9AiBuilderTest extends TestCase
         parent::setUp();
 
         $this->admin = User::factory()->create([
-            'email' => 'ai_test_' . uniqid() . '@example.com',
+            'email' => 'ai_test_'.uniqid().'@example.com',
         ]);
 
         $this->product = Product::create([

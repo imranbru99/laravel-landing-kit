@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Services\AI;
 
 use App\Services\SectionRegistry;
-use ImranDevBd\AiHub\Facades\AIHub;
 use Illuminate\Support\Facades\Log;
+use ImranDevBd\AiHub\Facades\AIHub;
 
 class AiLandingGenerator
 {
@@ -96,7 +96,7 @@ EOT;
                 return $this->validateAndSanitizeSections($decoded);
             }
         } catch (\Throwable $e) {
-            Log::warning('AI Landing Page Generation Failed, using high-converting fallback: ' . $e->getMessage());
+            Log::warning('AI Landing Page Generation Failed, using high-converting fallback: '.$e->getMessage());
         }
 
         // High-converting smart fallback tailored to the product
@@ -112,7 +112,7 @@ EOT;
         $defaults = $def ? $def->defaults() : [];
         $productName = $context['product_name'] ?? 'আমাদের পণ্য';
 
-        $prompt = "Write persuasive Bangla copy for a {$sectionType} section of a landing page for '{$productName}'. Return ONLY a JSON object matching this structure: " . json_encode($defaults, JSON_UNESCAPED_UNICODE);
+        $prompt = "Write persuasive Bangla copy for a {$sectionType} section of a landing page for '{$productName}'. Return ONLY a JSON object matching this structure: ".json_encode($defaults, JSON_UNESCAPED_UNICODE);
 
         try {
             $response = AIHub::prompt($prompt)->send();
@@ -149,6 +149,7 @@ EOT;
 
         try {
             $response = AIHub::prompt($prompt)->send();
+
             return trim($response->content);
         } catch (\Throwable $e) {
             return $text;
@@ -203,13 +204,13 @@ EOT;
         $sanitized = [];
 
         foreach ($sections as $sec) {
-            if (!isset($sec['section_type']) || !is_string($sec['section_type'])) {
+            if (! isset($sec['section_type']) || ! is_string($sec['section_type'])) {
                 continue;
             }
 
             $type = $sec['section_type'];
             // Check against section registry to disallow unknown types
-            if (!$this->sectionRegistry->has($type)) {
+            if (! $this->sectionRegistry->has($type)) {
                 continue;
             }
 
@@ -254,6 +255,7 @@ EOT;
                 $clean[$key] = $value;
             }
         }
+
         return $clean;
     }
 

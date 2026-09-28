@@ -18,6 +18,7 @@ class SendServerTrackingEvent implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
+
     public array $backoff = [10, 30, 60];
 
     public function __construct(
@@ -46,45 +47,45 @@ class SendServerTrackingEvent implements ShouldQueue
         $pixelId = (string) setting('meta_pixel_id', '');
         $token = (string) setting('meta_capi_token', '');
 
-        if (!$enabled || empty($pixelId) || empty($token)) {
+        if (! $enabled || empty($pixelId) || empty($token)) {
             return;
         }
 
         // Prepare SHA-256 hashed user data according to Meta specifications
         $hashedUserData = [];
 
-        if (!empty($this->userData['phone'])) {
+        if (! empty($this->userData['phone'])) {
             $normalizedPhone = llk_normalize_phone($this->userData['phone']);
             // Prepend BD country code 88 if not already present
-            if (!str_starts_with($normalizedPhone, '88')) {
-                $normalizedPhone = '88' . $normalizedPhone;
+            if (! str_starts_with($normalizedPhone, '88')) {
+                $normalizedPhone = '88'.$normalizedPhone;
             }
             $hashedUserData['ph'] = [hash('sha256', $normalizedPhone)];
         }
 
-        if (!empty($this->userData['name'])) {
+        if (! empty($this->userData['name'])) {
             $hashedUserData['fn'] = [hash('sha256', strtolower(trim($this->userData['name'])))];
         }
 
-        if (!empty($this->userData['city'])) {
+        if (! empty($this->userData['city'])) {
             $hashedUserData['ct'] = [hash('sha256', strtolower(trim($this->userData['city'])))];
         }
 
         $hashedUserData['country'] = [hash('sha256', 'bd')];
 
-        if (!empty($this->ipAddress)) {
+        if (! empty($this->ipAddress)) {
             $hashedUserData['client_ip_address'] = $this->ipAddress;
         }
 
-        if (!empty($this->userAgent)) {
+        if (! empty($this->userAgent)) {
             $hashedUserData['client_user_agent'] = $this->userAgent;
         }
 
-        if (!empty($this->userData['fbp'])) {
+        if (! empty($this->userData['fbp'])) {
             $hashedUserData['fbp'] = $this->userData['fbp'];
         }
 
-        if (!empty($this->userData['fbc'])) {
+        if (! empty($this->userData['fbc'])) {
             $hashedUserData['fbc'] = $this->userData['fbc'];
         }
 
@@ -105,12 +106,12 @@ class SendServerTrackingEvent implements ShouldQueue
                         'content_type' => 'product',
                         'contents' => $this->customData['contents'] ?? [],
                     ],
-                ]
+                ],
             ],
         ];
 
         $testCode = setting('meta_test_event_code');
-        if (!empty($testCode)) {
+        if (! empty($testCode)) {
             $payload['test_event_code'] = $testCode;
         }
 
@@ -130,7 +131,7 @@ class SendServerTrackingEvent implements ShouldQueue
                 'user_agent' => $this->userAgent,
             ]);
         } catch (\Throwable $e) {
-            Log::error('Meta CAPI Tracking Error: ' . $e->getMessage());
+            Log::error('Meta CAPI Tracking Error: '.$e->getMessage());
 
             TrackingLog::create([
                 'event_name' => $this->eventName,
@@ -154,12 +155,12 @@ class SendServerTrackingEvent implements ShouldQueue
         $enabled = (bool) setting('stape_enabled', false);
         $containerUrl = (string) setting('stape_container_url', '');
 
-        if (!$enabled || empty($containerUrl)) {
+        if (! $enabled || empty($containerUrl)) {
             return;
         }
 
         $payload = [
-            'client_id' => $this->userData['fbp'] ?? ('llk.' . time()),
+            'client_id' => $this->userData['fbp'] ?? ('llk.'.time()),
             'events' => [
                 [
                     'name' => strtolower($this->eventName),
@@ -168,13 +169,13 @@ class SendServerTrackingEvent implements ShouldQueue
                         'currency' => 'BDT',
                         'transaction_id' => (string) ($this->customData['order_id'] ?? $this->orderId),
                     ]),
-                ]
+                ],
             ],
             'user_data' => $this->userData,
         ];
 
         try {
-            $url = rtrim($containerUrl, '/') . '/mp/collect';
+            $url = rtrim($containerUrl, '/').'/mp/collect';
             $response = Http::timeout(8)->post($url, $payload);
 
             TrackingLog::create([
@@ -212,7 +213,7 @@ class SendServerTrackingEvent implements ShouldQueue
         $measurementId = (string) setting('ga4_measurement_id', '');
         $apiSecret = (string) setting('ga4_api_secret', '');
 
-        if (!$enabled || empty($measurementId) || empty($apiSecret)) {
+        if (! $enabled || empty($measurementId) || empty($apiSecret)) {
             return;
         }
 
@@ -226,7 +227,7 @@ class SendServerTrackingEvent implements ShouldQueue
         };
 
         $payload = [
-            'client_id' => $this->userData['ga_client_id'] ?? ('GA1.1.' . mt_rand(100000000, 999999999) . '.' . time()),
+            'client_id' => $this->userData['ga_client_id'] ?? ('GA1.1.'.mt_rand(100000000, 999999999).'.'.time()),
             'events' => [
                 [
                     'name' => $gaEventName,
@@ -235,7 +236,7 @@ class SendServerTrackingEvent implements ShouldQueue
                         'value' => (float) ($this->customData['value'] ?? 0),
                         'transaction_id' => (string) ($this->customData['order_id'] ?? $this->orderId),
                     ],
-                ]
+                ],
             ],
         ];
 

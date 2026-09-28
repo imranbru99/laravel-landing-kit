@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('video_url')->nullable();
             $table->text('short_description')->nullable();
             $table->longText('long_description')->nullable();
-            
+
             $table->decimal('regular_price', 12, 2)->default(0.00);
             $table->decimal('sale_price', 12, 2)->nullable();
             $table->decimal('cost_price', 12, 2)->nullable();

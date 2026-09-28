@@ -31,7 +31,7 @@ class SubmitOrderRequest extends FormRequest
             'payment_sender_number' => ['nullable', 'string', 'max:25'],
             'customer_notes' => ['nullable', 'string', 'max:500'],
             'idempotency_key' => ['nullable', 'string', 'max:64'],
-            
+
             // Honeypot fields
             '_hp_name' => ['nullable', 'string', 'max:100'],
             '_hp_time' => ['nullable', 'integer'],
@@ -42,8 +42,9 @@ class SubmitOrderRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             // Honeypot check
-            if (!empty($this->input('_hp_name'))) {
+            if (! empty($this->input('_hp_name'))) {
                 $validator->errors()->add('phone', 'Spam detection triggered.');
+
                 return;
             }
 
@@ -51,14 +52,16 @@ class SubmitOrderRequest extends FormRequest
                 $submissionTime = time() - (int) $this->input('_hp_time');
                 if ($submissionTime < 1) { // Submitted suspiciously fast (<1 sec)
                     $validator->errors()->add('phone', 'Please take a moment before submitting.');
+
                     return;
                 }
             }
 
             // BD phone validation
             $phone = (string) $this->input('phone');
-            if (!llk_is_valid_bd_phone($phone)) {
+            if (! llk_is_valid_bd_phone($phone)) {
                 $validator->errors()->add('phone', 'দয়া করে একটি সঠিক ১১ ডিজিটের বাংলাদেশী মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)।');
+
                 return;
             }
 

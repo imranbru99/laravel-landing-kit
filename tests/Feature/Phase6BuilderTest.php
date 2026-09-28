@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\LandingPage;
-use App\Models\PageRevision;
 use App\Models\PageSection;
 use App\Models\Product;
-use App\Models\SavedSection;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -18,7 +16,9 @@ class Phase6BuilderTest extends TestCase
     use DatabaseTransactions;
 
     protected User $admin;
+
     protected Product $product;
+
     protected LandingPage $landingPage;
 
     protected function setUp(): void
@@ -26,7 +26,7 @@ class Phase6BuilderTest extends TestCase
         parent::setUp();
 
         $this->admin = User::factory()->create([
-            'email' => 'admin_builder_' . uniqid() . '@test.com',
+            'email' => 'admin_builder_'.uniqid().'@test.com',
         ]);
 
         $this->product = Product::create([

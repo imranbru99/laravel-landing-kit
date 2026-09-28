@@ -3,6 +3,26 @@
 @section('title', (string) (($product->seo_title ?: $product->name) . ' | ' . setting('site_name', 'Amar Shop BD')))
 @section('meta_description', (string) ($product->seo_description ?: ($product->short_description ?: setting('seo_meta_description', ''))))
 
+@section('meta_tags')
+<script type="application/ld+json">
+{
+  "{{ '@context' }}": "https://schema.org/",
+  "{{ '@type' }}": "Product",
+  "name": "{{ addslashes($product->name) }}",
+  "image": "{{ $product->primary_image_url }}",
+  "description": "{{ addslashes($product->short_description ?: $product->name) }}",
+  "sku": "{{ $product->sku ?: 'LLK-' . $product->id }}",
+  "offers": {
+    "{{ '@type' }}": "Offer",
+    "url": "{{ url('/' . $product->slug) }}",
+    "priceCurrency": "BDT",
+    "price": "{{ (float) $product->effective_price }}",
+    "availability": "{{ $product->isInStock() ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}"
+  }
+}
+</script>
+@endsection
+
 @section('content')
 @if($product->landingPage && $product->landingPage->status === 'published' && $product->landingPage->sections->isNotEmpty())
     <div class="landing-page-dynamic-wrapper">

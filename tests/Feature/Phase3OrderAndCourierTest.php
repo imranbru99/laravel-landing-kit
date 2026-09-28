@@ -10,12 +10,13 @@ use App\Models\District;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\Thana;
-use App\Services\Courier\CourierManager;
 use App\Services\Courier\ManualCourierDriver;
 use App\Services\Courier\SteadfastCourierDriver;
 use App\Services\OrderStatusStateMachine;
 use App\Services\PdfGeneratorService;
+use App\Services\SettingService;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
@@ -267,7 +268,7 @@ test('courier drivers create shipments and track consignments', function () {
     ]);
 
     // Test Manual Courier Driver
-    $manualDriver = new ManualCourierDriver();
+    $manualDriver = new ManualCourierDriver;
     $result = $manualDriver->sendOrder($order);
 
     expect($result->success)->toBeTrue()
@@ -288,9 +289,9 @@ test('courier drivers create shipments and track consignments', function () {
         ], 200),
     ]);
 
-    \App\Models\Setting::updateOrCreate(['key' => 'steadfast_api_key'], ['value' => 'test-api-key', 'group' => 'courier', 'type' => 'string']);
-    \App\Models\Setting::updateOrCreate(['key' => 'steadfast_secret_key'], ['value' => 'test-secret-key', 'group' => 'courier', 'type' => 'string']);
-    app(\App\Services\SettingService::class)->clearCache();
+    Setting::updateOrCreate(['key' => 'steadfast_api_key'], ['value' => 'test-api-key', 'group' => 'courier', 'type' => 'string']);
+    Setting::updateOrCreate(['key' => 'steadfast_secret_key'], ['value' => 'test-secret-key', 'group' => 'courier', 'type' => 'string']);
+    app(SettingService::class)->clearCache();
 
     $steadfastDriver = app(SteadfastCourierDriver::class);
     $sfResult = $steadfastDriver->sendOrder($order);

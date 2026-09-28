@@ -13,7 +13,7 @@ use ImranDev\UniversalSlug\Traits\HasUniversalSlug;
 
 class Template extends Model
 {
-    use HasFactory, SoftDeletes, HasUniversalSlug;
+    use HasFactory, HasUniversalSlug, SoftDeletes;
 
     protected $fillable = [
         'name',

@@ -10,12 +10,15 @@ use App\Models\PageRevision;
 use App\Models\PageSection;
 use App\Models\Product;
 use App\Models\SavedSection;
+use App\Models\Template;
+use App\Services\AI\AiLandingGenerator;
 use App\Services\SectionRegistry;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class LandingPageBuilderController extends Controller
 {
@@ -30,10 +33,10 @@ class LandingPageBuilderController extends Controller
     {
         $landingPage = $product->landingPage;
 
-        if (!$landingPage) {
+        if (! $landingPage) {
             $landingPage = LandingPage::create([
                 'product_id' => $product->id,
-                'title' => $product->name . ' Landing Page',
+                'title' => $product->name.' Landing Page',
                 'status' => 'draft',
                 'theme_tokens' => [
                     'primary_color' => '#10b981',
@@ -74,7 +77,7 @@ class LandingPageBuilderController extends Controller
     public function builder(LandingPage $landingPage): View
     {
         $landingPage->load(['product.images', 'product.variants', 'product.offers', 'sections' => fn ($q) => $q->orderBy('position'), 'revisions']);
-        
+
         $categories = $this->sectionRegistry->categories();
         $sections = $this->sectionRegistry->all();
         $savedSections = SavedSection::latest()->get();
@@ -82,7 +85,7 @@ class LandingPageBuilderController extends Controller
         $currentSections = $landingPage->sections->map(fn ($s) => [
             'id' => $s->id,
             'section_type' => $s->section_type,
-            'label' => \Illuminate\Support\Str::headline($s->section_type),
+            'label' => Str::headline($s->section_type),
             'position' => $s->position,
             'is_visible' => $s->is_visible,
             'content' => $s->content ?? [],
@@ -105,7 +108,7 @@ class LandingPageBuilderController extends Controller
     public function canvas(LandingPage $landingPage): View
     {
         $landingPage->load(['product.images', 'product.variants', 'product.offers', 'sections' => fn ($q) => $q->where('is_visible', true)->orderBy('position')]);
-        
+
         $renderedSections = [];
         foreach ($landingPage->sections as $pageSection) {
             $html = $this->sectionRegistry->render(
@@ -151,7 +154,7 @@ class LandingPageBuilderController extends Controller
         $sectionType = $request->input('section_type');
         $def = $this->sectionRegistry->get($sectionType);
 
-        if (!$def) {
+        if (! $def) {
             return response()->json(['error' => 'Invalid section type'], 422);
         }
 
@@ -261,6 +264,7 @@ class LandingPageBuilderController extends Controller
     public function deleteSection(Request $request, LandingPage $landingPage, PageSection $section): JsonResponse
     {
         $section->delete();
+
         return response()->json(['success' => true]);
     }
 
@@ -269,7 +273,7 @@ class LandingPageBuilderController extends Controller
      */
     public function toggleVisibility(Request $request, LandingPage $landingPage, PageSection $section): JsonResponse
     {
-        $section->is_visible = !$section->is_visible;
+        $section->is_visible = ! $section->is_visible;
         $section->save();
 
         return response()->json([
@@ -347,7 +351,7 @@ class LandingPageBuilderController extends Controller
     {
         $revision = $landingPage->createRevision(
             auth()->user(),
-            $request->input('title', 'Manual revision ' . now()->format('H:i:s'))
+            $request->input('title', 'Manual revision '.now()->format('H:i:s'))
         );
 
         return response()->json([
@@ -406,7 +410,7 @@ class LandingPageBuilderController extends Controller
     /**
      * AI: Generate full landing page and save as draft.
      */
-    public function generateFullPage(Request $request, LandingPage $landingPage, \App\Services\AI\AiLandingGenerator $generator): JsonResponse
+    public function generateFullPage(Request $request, LandingPage $landingPage, AiLandingGenerator $generator): JsonResponse
     {
         $params = [
             'product_name' => $request->input('product_name', $landingPage->product?->name ?? 'আমাদের পণ্য'),
@@ -449,7 +453,7 @@ class LandingPageBuilderController extends Controller
     /**
      * AI: Rewrite or improve section copy.
      */
-    public function rewriteCopy(Request $request, \App\Services\AI\AiLandingGenerator $generator): JsonResponse
+    public function rewriteCopy(Request $request, AiLandingGenerator $generator): JsonResponse
     {
         $text = (string) $request->input('text', '');
         $mode = (string) $request->input('mode', 'more_persuasive');
@@ -469,7 +473,7 @@ class LandingPageBuilderController extends Controller
     /**
      * Apply a pre-built template to the current landing page.
      */
-    public function applyTemplate(Request $request, LandingPage $landingPage, \App\Models\Template $template): JsonResponse
+    public function applyTemplate(Request $request, LandingPage $landingPage, Template $template): JsonResponse
     {
         $landingPage->applyTemplate($template);
 

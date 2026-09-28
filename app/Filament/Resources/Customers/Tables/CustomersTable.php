@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Customers\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -38,10 +39,10 @@ class CustomersTable
                     ->badge()
                     ->color('primary'),
                 TextColumn::make('total_spent')
-                    ->formatStateUsing(fn ($state) => '৳' . number_format((float) $state, 2))
+                    ->formatStateUsing(fn ($state) => '৳'.number_format((float) $state, 2))
                     ->sortable(),
                 TextColumn::make('success_rate')
-                    ->formatStateUsing(fn ($state) => number_format((float) $state, 1) . '%')
+                    ->formatStateUsing(fn ($state) => number_format((float) $state, 1).'%')
                     ->badge()
                     ->color(fn ($state) => $state >= 80 ? 'success' : ($state >= 50 ? 'warning' : 'danger'))
                     ->sortable(),
@@ -58,13 +59,13 @@ class CustomersTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                \Filament\Actions\Action::make('toggle_block')
+                Action::make('toggle_block')
                     ->label(fn ($record) => $record->is_blocked ? 'Unblock' : 'Block')
                     ->icon(fn ($record) => $record->is_blocked ? 'heroicon-o-check-circle' : 'heroicon-o-no-symbol')
                     ->color(fn ($record) => $record->is_blocked ? 'success' : 'danger')
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        $record->update(['is_blocked' => !$record->is_blocked]);
+                        $record->update(['is_blocked' => ! $record->is_blocked]);
                     }),
                 EditAction::make(),
             ])

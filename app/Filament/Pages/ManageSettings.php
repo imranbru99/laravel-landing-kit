@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Services\SettingService;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -23,9 +22,9 @@ class ManageSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Settings & System';
+    protected static string|\UnitEnum|null $navigationGroup = 'Settings & System';
 
     protected static ?string $navigationLabel = 'Settings';
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -67,11 +68,11 @@ class Customer extends Model
     public function recalculateMetrics(): void
     {
         $this->total_orders = $this->orders()->count();
-        $this->delivered_orders_count = $this->orders()->whereIn('status', [\App\Enums\OrderStatus::Delivered->value, \App\Enums\OrderStatus::Paid->value])->count();
-        $this->returned_orders_count = $this->orders()->whereIn('status', [\App\Enums\OrderStatus::Returned->value, \App\Enums\OrderStatus::ReturnReceived->value])->count();
-        $this->cancelled_orders_count = $this->orders()->where('status', \App\Enums\OrderStatus::Cancelled->value)->count();
+        $this->delivered_orders_count = $this->orders()->whereIn('status', [OrderStatus::Delivered->value, OrderStatus::Paid->value])->count();
+        $this->returned_orders_count = $this->orders()->whereIn('status', [OrderStatus::Returned->value, OrderStatus::ReturnReceived->value])->count();
+        $this->cancelled_orders_count = $this->orders()->where('status', OrderStatus::Cancelled->value)->count();
 
-        $this->total_spent = (float) $this->orders()->whereIn('status', [\App\Enums\OrderStatus::Delivered->value, \App\Enums\OrderStatus::Paid->value])->sum('total_amount');
+        $this->total_spent = (float) $this->orders()->whereIn('status', [OrderStatus::Delivered->value, OrderStatus::Paid->value])->sum('total_amount');
 
         if ($this->total_orders > 0) {
             $this->success_rate = round(($this->delivered_orders_count / $this->total_orders) * 100, 2);
@@ -91,7 +92,7 @@ class Customer extends Model
         $first = $parts[0] ?? '';
 
         if (count($parts) > 1) {
-            return $first . ' ' . substr($parts[1], 0, 1) . '...';
+            return $first.' '.substr($parts[1], 0, 1).'...';
         }
 
         return $first;

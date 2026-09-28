@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $firstProduct = Product::active()->first();
     if ($firstProduct) {
-        return redirect()->to('/' . $firstProduct->slug);
+        return redirect()->to('/'.$firstProduct->slug);
     }
+
     return view('welcome');
 })->name('home');
 
@@ -43,6 +44,26 @@ Route::get('order-success/{token}', [OrderSuccessController::class, 'show'])->na
 
 // Public Order Tracking
 Route::get('track-order', [OrderTrackingController::class, 'index'])->name('order.track');
+
+// Dynamic Sitemap & Robots.txt
+Route::get('sitemap.xml', function () {
+    $products = Product::active()->get();
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    $xml .= '<url><loc>'.url('/').'</loc><priority>1.0</priority><changefreq>daily</changefreq></url>';
+    foreach ($products as $p) {
+        $xml .= '<url><loc>'.url('/'.$p->slug).'</loc><lastmod>'.$p->updated_at->toAtomString().'</lastmod><priority>0.8</priority><changefreq>weekly</changefreq></url>';
+    }
+    $xml .= '</urlset>';
+
+    return response($xml, 200, ['Content-Type' => 'application/xml']);
+})->name('sitemap');
+
+Route::get('robots.txt', function () {
+    $robots = (string) setting('robots_txt', "User-agent: *\nDisallow: /admin/\nDisallow: /checkout/\nAllow: /\n\nSitemap: ".url('/sitemap.xml'));
+
+    return response($robots, 200, ['Content-Type' => 'text/plain']);
+})->name('robots');
 
 // Admin PDF Generation routes
 Route::prefix('admin/orders/{order}')->name('admin.orders.')->group(function () {

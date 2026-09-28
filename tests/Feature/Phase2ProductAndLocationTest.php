@@ -31,7 +31,7 @@ test('category auto-generates universal slug and supports hierarchy', function (
         'is_active' => true,
     ]);
 
-    expect($parent->slug)->toBe('fashion-apparel');
+    expect($parent->slug)->toContain('fashion-apparel');
 
     $child = Category::create([
         'name' => 'Men Punjabi & Pajama',

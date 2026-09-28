@@ -70,7 +70,7 @@ class LandingPage extends Model
         return PageRevision::create([
             'landing_page_id' => $this->id,
             'user_id' => $user?->id,
-            'title' => $title ?: 'Autosave ' . now()->format('d M Y, h:i A'),
+            'title' => $title ?: 'Autosave '.now()->format('d M Y, h:i A'),
             'snapshot' => [
                 'page' => [
                     'theme_tokens' => $this->theme_tokens,
@@ -123,7 +123,7 @@ class LandingPage extends Model
     {
         DB::transaction(function () use ($template) {
             // Take backup revision first
-            $this->createRevision(title: 'Before applying template: ' . $template->name);
+            $this->createRevision(title: 'Before applying template: '.$template->name);
 
             $this->update([
                 'template_id' => $template->id,

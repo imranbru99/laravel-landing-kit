@@ -35,7 +35,7 @@ class Phase7SectionsTest extends TestCase
 
         $this->assertStringContainsString('এক্সক্লুসিভ লাক্সারি পাঞ্জাবি', $heroHtml);
         $this->assertStringContainsString('ঈদ ধামাকা অফার', $heroHtml);
-        $this->assertStringContainsString('2,200', $heroHtml);
+        $this->assertStringContainsString('২,২০০', $heroHtml);
 
         // Render Classic Order Form
         $formHtml = $registry->render('order_form_classic', [
@@ -51,7 +51,7 @@ class Phase7SectionsTest extends TestCase
     {
         $product = Product::create([
             'name' => 'Organic Pure Honey BD',
-            'slug' => 'organic-pure-honey-bd-' . uniqid(),
+            'slug' => 'organic-pure-honey-bd-'.uniqid(),
             'regular_price' => 1500,
             'sale_price' => 1250,
             'status' => 'active',
@@ -80,7 +80,7 @@ class Phase7SectionsTest extends TestCase
             'content' => ['title' => 'ক্যাশ অন ডেলিভারিতে অর্ডার করুন'],
         ]);
 
-        $response = $this->get('/' . $product->slug);
+        $response = $this->get('/'.$product->slug);
 
         $response->assertOk();
         $response->assertSee('খাঁটি সুন্দরবনের প্রাকৃতিক মধু');

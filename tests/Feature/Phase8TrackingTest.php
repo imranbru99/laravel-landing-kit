@@ -111,10 +111,10 @@ class Phase8TrackingTest extends TestCase
 
         /** @var TrackingManager $manager */
         $manager = app(TrackingManager::class);
-        $manager->trackPurchase($order, 'purchase_' . $order->id);
+        $manager->trackPurchase($order, 'purchase_'.$order->id);
 
         Queue::assertPushed(SendServerTrackingEvent::class, function ($job) use ($order) {
-            return $job->eventName === 'Purchase' && $job->eventId === 'purchase_' . $order->id;
+            return $job->eventName === 'Purchase' && $job->eventId === 'purchase_'.$order->id;
         });
     }
 

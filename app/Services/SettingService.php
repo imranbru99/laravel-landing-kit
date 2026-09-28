@@ -43,7 +43,7 @@ class SettingService
             default => (string) $value,
         };
 
-        if ($isEncrypted && !empty($rawValue)) {
+        if ($isEncrypted && ! empty($rawValue)) {
             $rawValue = Crypt::encryptString($rawValue);
         }
 
@@ -72,6 +72,7 @@ class SettingService
                 foreach ($rows as $row) {
                     $output[$row->key] = $row->parsed_value;
                 }
+
                 return $output;
             } catch (\Throwable) {
                 return [];
@@ -86,7 +87,7 @@ class SettingService
     {
         $all = $this->all();
         $groupSettings = [];
-        
+
         try {
             $keys = Setting::where('group', $group)->pluck('key')->all();
             foreach ($keys as $k) {
